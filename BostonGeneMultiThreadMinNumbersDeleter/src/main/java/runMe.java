@@ -7,13 +7,11 @@ import java.util.regex.Pattern;
 
 public class runMe {
     public static void main(String... args){
+        System.out.println(" Для завершения работы введите exit");
         try {
             DataValues store = new DataValues();
             GetThread getter = new GetThread(store);
             PutThread putter = new PutThread(store);
-            while(putter.currThread.getState() == Thread.State.RUNNABLE){
-               //waiting...
-            }
             putter.currThread.join();
             getter.endInput();
             getter.currThread.join();
@@ -84,7 +82,7 @@ class DataValues{
         }
     }
 
-    Integer numberToInteger(String number){
+    Integer numberToInteger(String number){ //получаем численное представления слова с помощью regEx
         Integer value = 0;
         int prevValue = 0;
         Pattern worldPattern = Pattern.compile("\\s");
@@ -126,8 +124,10 @@ class GetThread implements  Runnable{
         }
     }
 
-    synchronized void endInput(){
-        isInputOver = true;
+    void endInput(){
+        synchronized (this) {
+            isInputOver = true;
+        }
     }
 }
 
